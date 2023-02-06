@@ -12,14 +12,14 @@ class TmdbSpider(scrapy.Spider):
 
   def parse_full_credits(self, response):
 
-    actor_urls = [actor.attrib["href"] for actor in response.css("div.info a")]
+    actor_urls = [actor.attrib["href"] for actor in response.css("ol.people.credits:not(ol.people.credits.crew) li a")]
     for actor_url in actor_urls:
       url = "https://themoviedb.org" + actor_url
 
       yield scrapy.Request(url, callback = self.parse_actor_page)
 
   def parse_actor_page(self, response):
-    actor_name = response.css("div.title h2 a ::text").getall()
+    actor_name = response.css("div.title h2 a ::text").get()
     movies = response.css("a.tooltip bdi::text").getall()
 
     for movie in movies:
