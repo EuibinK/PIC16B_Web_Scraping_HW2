@@ -40,7 +40,9 @@ class TmdbSpider(scrapy.Spider):
 
     '''
     actor_name = response.css("div.title h2 a ::text").get()
-    movies = response.css("a.tooltip bdi::text").getall()
+    movies = response.css("h3:contains('Acting') + table.card.credits a.tooltip bdi::text").getall()
+
+    # movies = response.css("a.tooltip bdi::text").getall()
 
     for movie in movies:
       yield {"actor" : actor_name, "movie_or_TV_name" : movie}
